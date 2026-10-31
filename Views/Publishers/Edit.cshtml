@@ -1,0 +1,22 @@
+@model Publisher
+@{ ViewData["Title"] = "Edit publisher"; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Publishers</a>
+        <h1>Edit publisher</h1>
+    </div>
+</div>
+
+<form method="post" asp-action="EditCurrent" class="panel form-panel" style="max-width:720px">
+    <input type="hidden" asp-for="Id" />
+    <partial name="_PublisherFields" model="Model" />
+    <div class="form-footer">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i>Save changes</button>
+        <a asp-action="GetIndexView" class="btn btn-light-outline">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

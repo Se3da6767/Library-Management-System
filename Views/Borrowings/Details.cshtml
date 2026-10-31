@@ -1,0 +1,39 @@
+@model Borrowing
+@{ ViewData["Title"] = "Borrowing Details"; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Borrowings</a>
+        <h1>Borrowing #@Model.Id</h1>
+        <p>@Model.Book.Title — @Model.Member.FullName</p>
+    </div>
+    <div class="page-actions">
+        @if (!Model.IsReturned)
+        {
+            <form method="post" asp-action="MarkReturned" asp-route-id="@Model.Id">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-box-arrow-in-down-left"></i>Mark as returned</button>
+            </form>
+        }
+        <a asp-action="GetEditView" asp-route-id="@Model.Id" class="btn btn-light-outline"><i class="bi bi-pencil"></i>Edit</a>
+    </div>
+</div>
+
+<div class="detail-layout">
+    <div class="cover-frame"><img src="@DisplayHelper.ImageUrl(Model.Book.ImagePath)" alt="Cover of @Model.Book.Title" /></div>
+    <div class="panel">
+        <div class="panel-head">
+            <h2>Loan information</h2>
+            <partial name="_BorrowingStatus" model="Model" />
+        </div>
+        <div class="panel-body">
+            <dl class="detail-list">
+                <dt>Book</dt><dd><a asp-controller="Books" asp-action="GetDetailsView" asp-route-id="@Model.Book.Id">@Model.Book.Title</a></dd>
+                <dt>Member</dt><dd><a asp-controller="Members" asp-action="GetDetailsView" asp-route-id="@Model.Member.Id">@Model.Member.FullName</a></dd>
+                <dt>Borrow date</dt><dd>@DisplayHelper.Date(Model.BorrowDate)</dd>
+                <dt>Due date</dt><dd>@DisplayHelper.Date(Model.DueDate)</dd>
+                <dt>Return date</dt><dd>@DisplayHelper.Date(Model.ReturnDate)</dd>
+                <dt>Late fee</dt><dd>@DisplayHelper.Money(Model.LateFee)</dd>
+            </dl>
+        </div>
+    </div>
+</div>

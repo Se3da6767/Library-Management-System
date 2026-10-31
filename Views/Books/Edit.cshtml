@@ -1,0 +1,30 @@
+@model Book
+@{ ViewData["Title"] = "Edit Book"; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Books</a>
+        <h1>Edit book</h1>
+        <p>Update the details of “@Model.Title”. The cover changes only if you choose a new file.</p>
+    </div>
+</div>
+
+<form method="post" asp-controller="Books" asp-action="EditCurrent" enctype="multipart/form-data" class="panel">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ImagePath" />
+    <partial name="_BookFields" model="Model" />
+    <div class="form-footer">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i>Save changes</button>
+        <a asp-action="GetDetailsView" asp-route-id="@Model.Id" class="btn btn-light-outline">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function addPreviewImage() {
+            const file = document.getElementById('imageFileInput').files[0];
+            if (file) document.getElementById('bookImage').src = window.URL.createObjectURL(file);
+        }
+    </script>
+}

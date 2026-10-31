@@ -1,0 +1,127 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    var recentBorrowings = (List<Borrowing>)ViewBag.RecentBorrowings;
+    var latestBooks = (List<Book>)ViewBag.LatestBooks;
+}
+
+<section class="welcome">
+    <div>
+        <h1>@ViewBag.LibraryName</h1>
+        <p>Books, members and borrowings — managed in one place.</p>
+        <span class="hours"><i class="bi bi-clock"></i> Open daily · @ViewBag.OpeningHours</span>
+    </div>
+    <div class="page-actions">
+        <a asp-controller="Borrowings" asp-action="GetCreateView" class="btn btn-primary"><i class="bi bi-plus-lg"></i>New borrowing</a>
+        <a asp-controller="Books" asp-action="GetCreateView" class="btn btn-light-outline"><i class="bi bi-journal-plus"></i>Add book</a>
+    </div>
+</section>
+
+<div class="stat-grid">
+    <a class="stat-card" asp-controller="Books" asp-action="GetIndexView">
+        <span class="stat-icon teal"><i class="bi bi-journal-bookmark"></i></span>
+        <span>
+            <span class="stat-value d-block">@ViewBag.BooksCount</span>
+            <span class="stat-label d-block">Books</span>
+            <span class="stat-note d-block">@ViewBag.AvailableBooks available now</span>
+        </span>
+    </a>
+    <a class="stat-card" asp-controller="Members" asp-action="GetIndexView">
+        <span class="stat-icon blue"><i class="bi bi-people"></i></span>
+        <span>
+            <span class="stat-value d-block">@ViewBag.MembersCount</span>
+            <span class="stat-label d-block">Active members</span>
+        </span>
+    </a>
+    <a class="stat-card" asp-controller="Borrowings" asp-action="GetIndexView" asp-route-status="active">
+        <span class="stat-icon amber"><i class="bi bi-arrow-left-right"></i></span>
+        <span>
+            <span class="stat-value d-block">@ViewBag.ActiveBorrowings</span>
+            <span class="stat-label d-block">Books on loan</span>
+        </span>
+    </a>
+    <a class="stat-card" asp-controller="Borrowings" asp-action="GetIndexView" asp-route-status="overdue">
+        <span class="stat-icon red"><i class="bi bi-exclamation-triangle"></i></span>
+        <span>
+            <span class="stat-value d-block">@ViewBag.OverdueBorrowings</span>
+            <span class="stat-label d-block">Overdue</span>
+        </span>
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="panel h-100">
+            <div class="panel-head">
+                <h2>Recent borrowings</h2>
+                <a asp-controller="Borrowings" asp-action="GetIndexView" class="small">View all</a>
+            </div>
+            @if (recentBorrowings.Any())
+            {
+                <ul class="mini-list">
+                    @foreach (var b in recentBorrowings)
+                    {
+                        <li>
+                            <span class="person-cell">
+                                <span class="avatar sm">@DisplayHelper.Initials(b.Member.FullName)</span>
+                                <span>
+                                    <a class="cell-title" asp-controller="Borrowings" asp-action="GetDetailsView" asp-route-id="@b.Id">@b.Book.Title</a>
+                                    <span class="cell-sub">@b.Member.FullName · @DisplayHelper.Date(b.BorrowDate)</span>
+                                </span>
+                            </span>
+                            <partial name="_BorrowingStatus" model="b" />
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="empty-state"><i class="bi bi-inbox"></i><h3>No borrowings yet</h3><p>New loans will appear here.</p></div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="panel h-100">
+            <div class="panel-head">
+                <h2>Latest additions</h2>
+                <a asp-controller="Books" asp-action="GetIndexView" class="small">All books</a>
+            </div>
+            <ul class="mini-list">
+                @foreach (var book in latestBooks)
+                {
+                    <li>
+                        <span class="book-cell">
+                            <img src="@DisplayHelper.ImageUrl(book.ImagePath)" class="thumb" alt="" />
+                            <span>
+                                <a class="cell-title" asp-controller="Books" asp-action="GetDetailsView" asp-route-id="@book.Id">@book.Title</a>
+                                <span class="cell-sub">@book.AuthorName</span>
+                            </span>
+                        </span>
+                        @if (book.IsAvailable)
+                        {
+                            <span class="pill pill-ok">Available</span>
+                        }
+                        else
+                        {
+                            <span class="pill pill-warn">On loan</span>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-sm-6">
+        <a class="stat-card" asp-controller="Categories" asp-action="GetIndexView">
+            <span class="stat-icon teal"><i class="bi bi-tags"></i></span>
+            <span><span class="stat-value d-block">@ViewBag.CategoriesCount</span><span class="stat-label d-block">Categories</span></span>
+        </a>
+    </div>
+    <div class="col-sm-6">
+        <a class="stat-card" asp-controller="Publishers" asp-action="GetIndexView">
+            <span class="stat-icon blue"><i class="bi bi-building"></i></span>
+            <span><span class="stat-value d-block">@ViewBag.PublishersCount</span><span class="stat-label d-block">Publishers</span></span>
+        </a>
+    </div>
+</div>

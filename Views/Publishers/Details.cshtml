@@ -1,0 +1,57 @@
+@model Publisher
+@{ ViewData["Title"] = Model.Name; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Publishers</a>
+        <h1>@Model.Name</h1>
+        <p><i class="bi bi-geo-alt"></i> @Model.Country</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="GetEditView" asp-route-id="@Model.Id" class="btn btn-primary"><i class="bi bi-pencil"></i>Edit</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="panel">
+            <div class="panel-head"><h2>Contact</h2></div>
+            <div class="panel-body">
+                <dl class="detail-list">
+                    <dt>Email</dt><dd>@(string.IsNullOrEmpty(Model.Email) ? "—" : Model.Email)</dd>
+                    <dt>Phone</dt><dd>@(string.IsNullOrEmpty(Model.PhoneNo) ? "—" : Model.PhoneNo)</dd>
+                    <dt>Country</dt><dd>@Model.Country</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="panel">
+            <div class="panel-head">
+                <h2>Published books</h2>
+                <span class="result-count">@Model.Books.Count</span>
+            </div>
+            @if (Model.Books.Any())
+            {
+                <ul class="link-list">
+                    @foreach (var b in Model.Books.OrderBy(b => b.Title))
+                    {
+                        <li>
+                            <span class="book-cell">
+                                <img src="@DisplayHelper.ImageUrl(b.ImagePath)" class="thumb" alt="" />
+                                <span>
+                                    <a asp-controller="Books" asp-action="GetDetailsView" asp-route-id="@b.Id" class="cell-title">@b.Title</a>
+                                    <span class="cell-sub">@b.AuthorName</span>
+                                </span>
+                            </span>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="empty-state"><i class="bi bi-journal"></i><h3>No books for this publisher</h3></div>
+            }
+        </div>
+    </div>
+</div>

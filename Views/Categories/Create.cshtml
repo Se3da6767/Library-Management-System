@@ -1,0 +1,23 @@
+@model Category
+@{ ViewData["Title"] = "Add a new category"; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Categories</a>
+        <h1>Add a new category</h1>
+        <p>Categories help members and staff find books by subject.</p>
+    </div>
+</div>
+
+<form method="post" asp-action="AddNew" class="panel form-panel" style="max-width:640px">
+
+    <partial name="_CategoryFields" model="Model" />
+    <div class="form-footer">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i>Add category</button>
+        <a asp-action="GetIndexView" class="btn btn-light-outline">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,56 @@
+@model IEnumerable<Publisher>
+@{ ViewData["Title"] = "Publishers"; }
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Catalog</span>
+        <h1>Publishers</h1>
+        <p>Publishing houses and the books they publish.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="GetCreateView" class="btn btn-primary"><i class="bi bi-plus-lg"></i>Add publisher</a>
+    </div>
+</div>
+
+<div class="panel">
+    @if (Model.Any())
+    {
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>@Html.DisplayNameFor(p => p.Name)</th>
+                        <th>Country</th>
+                        <th>Contact</th>
+                        <th class="num">Books</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model)
+                    {
+                        <tr>
+                            <td class="id">@p.Id</td>
+                            <td><a asp-action="GetDetailsView" asp-route-id="@p.Id" class="cell-title">@p.Name</a></td>
+                            <td><span class="chip">@p.Country</span></td>
+                            <td>@p.Email<span class="cell-sub">@p.PhoneNo</span></td>
+                            <td class="num">@p.Books.Count</td>
+                            <td class="actions">
+                                <span class="icon-actions">
+                                    <a asp-action="GetDetailsView" asp-route-id="@p.Id" class="btn-icon" title="Details"><i class="bi bi-eye"></i></a>
+                                    <a asp-action="GetEditView" asp-route-id="@p.Id" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    <a asp-action="GetDeleteView" asp-route-id="@p.Id" class="btn-icon delete" title="Delete"><i class="bi bi-trash3"></i></a>
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state"><i class="bi bi-building"></i><h3>No publishers yet</h3><p>Add a publisher before adding books.</p></div>
+    }
+</div>

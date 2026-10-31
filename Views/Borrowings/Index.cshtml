@@ -1,0 +1,83 @@
+@model IEnumerable<Borrowing>
+@{
+    ViewData["Title"] = "Borrowings";
+    string? status = ViewBag.CurrentStatus;
+    string Tab(string? value) => status == value ? "active" : "";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Circulation</span>
+        <h1>Borrowings</h1>
+        <p>Track who has which book, when it is due, and return books in one click.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="GetCreateView" class="btn btn-primary"><i class="bi bi-plus-lg"></i>New borrowing</a>
+    </div>
+</div>
+
+<div class="toolbar">
+    <nav class="filter-tabs" aria-label="Filter borrowings">
+        <a asp-action="GetIndexView" class="@Tab(null)">All</a>
+        <a asp-action="GetIndexView" asp-route-status="active" class="@Tab("active")">On loan</a>
+        <a asp-action="GetIndexView" asp-route-status="overdue" class="@Tab("overdue")">Overdue</a>
+        <a asp-action="GetIndexView" asp-route-status="returned" class="@Tab("returned")">Returned</a>
+    </nav>
+    <span class="result-count">@Model.Count() @(Model.Count() == 1 ? "record" : "records") · late fee @DisplayHelper.Money(LibrarySystem.Controllers.BorrowingsController.LateFeePerDay) / day</span>
+</div>
+
+<div class="panel">
+    @if (Model.Any())
+    {
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Member</th>
+                        <th>Borrowed / Due</th>
+                        <th>Returned</th>
+                        <th class="num">Late fee</th>
+                        <th>Status</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var b in Model)
+                    {
+                        <tr>
+                            <td class="nowrap"><a asp-controller="Books" asp-action="GetDetailsView" asp-route-id="@b.BookId" class="cell-title">@b.Book.Title</a></td>
+                            <td>
+                                <span class="person-cell">
+                                    <span class="avatar sm">@DisplayHelper.Initials(b.Member.FullName)</span>
+                                    <a asp-controller="Members" asp-action="GetDetailsView" asp-route-id="@b.MemberId">@b.Member.FullName</a>
+                                </span>
+                            </td>
+                            <td class="nowrap">@DisplayHelper.Date(b.BorrowDate)<span class="cell-sub">Due @DisplayHelper.Date(b.DueDate)</span></td>
+                            <td class="nowrap">@DisplayHelper.Date(b.ReturnDate)</td>
+                            <td class="num">@(b.LateFee > 0 ? DisplayHelper.Money(b.LateFee) : "—")</td>
+                            <td><partial name="_BorrowingStatus" model="b" /></td>
+                            <td class="actions">
+                                <span class="icon-actions">
+                                    @if (!b.IsReturned)
+                                    {
+                                        <form method="post" asp-action="MarkReturned" asp-route-id="@b.Id" class="d-inline">
+                                            <button type="submit" class="btn-icon return" title="Mark as returned"><i class="bi bi-box-arrow-in-down-left"></i></button>
+                                        </form>
+                                    }
+                                    <a asp-action="GetDetailsView" asp-route-id="@b.Id" class="btn-icon" title="Details"><i class="bi bi-eye"></i></a>
+                                    <a asp-action="GetEditView" asp-route-id="@b.Id" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    <a asp-action="GetDeleteView" asp-route-id="@b.Id" class="btn-icon delete" title="Delete"><i class="bi bi-trash3"></i></a>
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state"><i class="bi bi-inbox"></i><h3>No borrowings here</h3><p>Records that match this filter will appear here.</p></div>
+    }
+</div>

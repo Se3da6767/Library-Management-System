@@ -1,0 +1,33 @@
+@model Member
+@{ ViewData["Title"] = "Delete Member"; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Members</a>
+        <h1>Delete member</h1>
+    </div>
+</div>
+
+<div class="panel danger-panel form-panel" style="max-width:680px">
+    <div class="danger-head">
+        <span class="icon"><i class="bi bi-exclamation-triangle"></i></span>
+        <div>
+            <h2>Delete @Model.FullName?</h2>
+            <p>Members with borrowing history can't be deleted — mark them as inactive instead.</p>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div asp-validation-summary="ModelOnly"></div>
+        <dl class="detail-list">
+            <dt>Full name</dt><dd>@Model.FullName</dd>
+            <dt>National Id</dt><dd>@Model.NationalId</dd>
+            <dt>Email</dt><dd>@Model.Email</dd>
+            <dt>Borrowing records</dt><dd>@Model.Borrowings.Count (@Model.Borrowings.Count(b => !b.IsReturned) on loan)</dd>
+        </dl>
+    </div>
+    <form method="post" asp-action="DeleteCurrent" class="form-footer">
+        <input type="hidden" asp-for="Id" />
+        <button class="btn btn-danger" type="submit"><i class="bi bi-trash3"></i>Delete member</button>
+        <a asp-action="GetIndexView" class="btn btn-light-outline">Cancel</a>
+    </form>
+</div>

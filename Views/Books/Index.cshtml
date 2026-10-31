@@ -1,0 +1,158 @@
+@model IEnumerable<Book>
+@{
+    ViewData["Title"] = "Books";
+    string? search = ViewBag.CurrentSearch;
+    string? sortType = ViewBag.SortType;
+    string? sortOrder = ViewBag.SortOrder;
+}
+
+@functions {
+    // Clicking a column header sorts ascending first, then toggles direction.
+    string NextOrder(string column, string? sortType, string? sortOrder) =>
+        sortType == column && sortOrder == "asc" ? "desc" : "asc";
+
+    string SortIcon(string column, string? sortType, string? sortOrder) =>
+        sortType != column ? "bi-arrow-down-up" : sortOrder == "asc" ? "bi-sort-up" : "bi-sort-down";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Catalog</span>
+        <h1>Books</h1>
+        <p>Browse, search and manage every title in the library.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="GetCreateView" class="btn btn-primary"><i class="bi bi-plus-lg"></i>Add book</a>
+    </div>
+</div>
+
+<div class="toolbar">
+    <form method="get" asp-controller="Books" asp-action="GetIndexView" class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" name="search" value="@search" class="form-control" placeholder="Search by title, author or ISBN" />
+        <input type="hidden" name="sortType" value="@sortType" />
+        <input type="hidden" name="sortOrder" value="@sortOrder" />
+    </form>
+    <span class="result-count">
+        @Model.Count() @(Model.Count() == 1 ? "book" : "books")
+        @if (!string.IsNullOrWhiteSpace(search))
+        {
+            <text>for “@search”</text>
+            <a asp-action="GetIndexView" class="clear-link">Clear</a>
+        }
+    </span>
+</div>
+
+@if (Model.Any())
+{
+    <div class="panel">
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>
+                            <a class="sort-head @(sortType == "Title" ? "active" : "")" asp-action="GetIndexView" asp-route-sortType="Title" asp-route-sortOrder="@NextOrder("Title", sortType, sortOrder)" asp-route-search="@search">
+                                @Html.DisplayNameFor(b => b.Title) <i class="bi @SortIcon("Title", sortType, sortOrder)"></i>
+                            </a>
+                        </th>
+                        <th>
+                            <a class="sort-head @(sortType == "AuthorName" ? "active" : "")" asp-action="GetIndexView" asp-route-sortType="AuthorName" asp-route-sortOrder="@NextOrder("AuthorName", sortType, sortOrder)" asp-route-search="@search">
+                                @Html.DisplayNameFor(b => b.AuthorName) <i class="bi @SortIcon("AuthorName", sortType, sortOrder)"></i>
+                            </a>
+                        </th>
+                        <th>Category</th>
+                        <th>Publisher</th>
+                        <th class="num">
+                            <a class="sort-head @(sortType == "Price" ? "active" : "")" asp-action="GetIndexView" asp-route-sortType="Price" asp-route-sortOrder="@NextOrder("Price", sortType, sortOrder)" asp-route-search="@search">
+                                @Html.DisplayNameFor(b => b.Price) <i class="bi @SortIcon("Price", sortType, sortOrder)"></i>
+                            </a>
+                        </th>
+                        <th>Status</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var book in Model)
+                    {
+                        <tr>
+                            <td class="id">@book.Id</td>
+                            <td>
+                                <div class="book-cell">
+                                    <img src="@DisplayHelper.ImageUrl(book.ImagePath)" alt="Cover of @book.Title" class="thumb" />
+                                    <span>
+                                        <a asp-action="GetDetailsView" asp-route-id="@book.Id" class="cell-title">@book.Title</a>
+                                        <span class="cell-sub">ISBN @book.ISBN</span>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>@book.AuthorName</td>
+                            <td><span class="chip">@book.Category.Name</span></td>
+                            <td>@book.Publisher.Name</td>
+                            <td class="num">@DisplayHelper.Money(book.Price)</td>
+                            <td>
+                                @if (book.IsAvailable)
+                                {
+                                    <span class="pill pill-ok">Available</span>
+                                }
+                                else
+                                {
+                                    <span class="pill pill-warn">On loan</span>
+                                }
+                            </td>
+                            <td class="actions">
+                                <span class="icon-actions">
+                                    <a asp-action="GetDetailsView" asp-route-id="@book.Id" class="btn-icon" title="Details"><i class="bi bi-eye"></i></a>
+                                    <a asp-action="GetEditView" asp-route-id="@book.Id" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    <a asp-action="GetDeleteView" asp-route-id="@book.Id" class="btn-icon delete" title="Delete"><i class="bi bi-trash3"></i></a>
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5" class="text-end">Total price</td>
+                        <td class="num">@DisplayHelper.Money(Model.Sum(b => b.Price))</td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <h2 class="section-title">Shelf view</h2>
+    <div class="book-grid">
+        @foreach (var book in Model)
+        {
+            <a class="book-card" asp-action="GetDetailsView" asp-route-id="@book.Id">
+                <div class="book-cover"><img src="@DisplayHelper.ImageUrl(book.ImagePath)" alt="Cover of @book.Title" /></div>
+                <div class="book-meta">
+                    <span class="title">@book.Title</span>
+                    <span class="author">@book.AuthorName</span>
+                    <span class="foot">
+                        <span class="price">@DisplayHelper.Money(book.Price)</span>
+                        @if (book.IsAvailable)
+                        {
+                            <span class="pill pill-ok">Available</span>
+                        }
+                        else
+                        {
+                            <span class="pill pill-warn">On loan</span>
+                        }
+                    </span>
+                </div>
+            </a>
+        }
+    </div>
+}
+else
+{
+    <div class="panel">
+        <div class="empty-state">
+            <i class="bi bi-journal-x"></i>
+            <h3>No books found</h3>
+            <p>@(string.IsNullOrWhiteSpace(search) ? "Start by adding the first book to the catalog." : "Try a different title, author or ISBN.")</p>
+        </div>
+    </div>
+}

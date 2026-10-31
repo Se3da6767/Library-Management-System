@@ -1,0 +1,26 @@
+@model Publisher
+<div class="panel-body">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="form-grid">
+        <div>
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Country" class="form-label"></label>
+            <input asp-for="Country" class="form-control" />
+            <span asp-validation-for="Country" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" type="email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="PhoneNo" class="form-label"></label>
+            <input asp-for="PhoneNo" class="form-control" placeholder="01xxxxxxxxx" />
+            <span asp-validation-for="PhoneNo" class="text-danger"></span>
+        </div>
+    </div>
+</div>

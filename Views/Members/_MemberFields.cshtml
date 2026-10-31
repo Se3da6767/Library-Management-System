@@ -1,0 +1,61 @@
+@model Member
+<div class="panel-body">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="form-grid">
+        <div>
+            <label asp-for="FullName" class="form-label"></label>
+            <input asp-for="FullName" class="form-control" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="NationalId" class="form-label"></label>
+            <input asp-for="NationalId" class="form-control" inputmode="numeric" maxlength="14" />
+            <span asp-validation-for="NationalId" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" type="email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="ConfirmEmail" class="form-label"></label>
+            <input asp-for="ConfirmEmail" type="email" class="form-control" />
+            <span asp-validation-for="ConfirmEmail" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="PhoneNo" class="form-label"></label>
+            <input asp-for="PhoneNo" class="form-control" placeholder="01xxxxxxxxx" />
+            <span asp-validation-for="PhoneNo" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="MembershipType" class="form-label"></label>
+            <select asp-for="MembershipType" class="form-select">
+                <option>Standard</option>
+                <option>Student</option>
+                <option>Premium</option>
+            </select>
+            <span asp-validation-for="MembershipType" class="text-danger"></span>
+        </div>
+        <div class="span-2">
+            <label asp-for="Address" class="form-label"></label>
+            <input asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="BirthDate" class="form-label"></label>
+            <input asp-for="BirthDate" type="date" class="form-control" />
+            <span asp-validation-for="BirthDate" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="JoinDate" class="form-label"></label>
+            <input asp-for="JoinDate" type="date" class="form-control" />
+            <span asp-validation-for="JoinDate" class="text-danger"></span>
+        </div>
+        <div class="span-2">
+            <div class="switch-row form-switch">
+                <input asp-for="IsActive" class="form-check-input" role="switch" />
+                <label asp-for="IsActive" class="form-check-label"></label>
+            </div>
+        </div>
+    </div>
+</div>

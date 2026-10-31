@@ -1,0 +1,65 @@
+@model IEnumerable<Category>
+@{ ViewData["Title"] = "Categories"; }
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Catalog</span>
+        <h1>Categories</h1>
+        <p>Group books by subject. Only active categories appear when adding a book.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="GetCreateView" class="btn btn-primary"><i class="bi bi-plus-lg"></i>Add category</a>
+    </div>
+</div>
+
+<div class="panel">
+    @if (Model.Any())
+    {
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>@Html.DisplayNameFor(c => c.Name)</th>
+                        <th>@Html.DisplayNameFor(c => c.Description)</th>
+                        <th class="num">Books</th>
+                        <th>Status</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model)
+                    {
+                        <tr>
+                            <td class="id">@c.Id</td>
+                            <td><a asp-action="GetDetailsView" asp-route-id="@c.Id" class="cell-title">@c.Name</a></td>
+                            <td class="text-secondary">@c.Description</td>
+                            <td class="num">@c.Books.Count</td>
+                            <td>
+                                @if (c.IsActive)
+                                {
+                                    <span class="pill pill-ok">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="pill pill-muted">Inactive</span>
+                                }
+                            </td>
+                            <td class="actions">
+                                <span class="icon-actions">
+                                    <a asp-action="GetDetailsView" asp-route-id="@c.Id" class="btn-icon" title="Details"><i class="bi bi-eye"></i></a>
+                                    <a asp-action="GetEditView" asp-route-id="@c.Id" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    <a asp-action="GetDeleteView" asp-route-id="@c.Id" class="btn-icon delete" title="Delete"><i class="bi bi-trash3"></i></a>
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state"><i class="bi bi-tags"></i><h3>No categories yet</h3><p>Create a category before adding books.</p></div>
+    }
+</div>

@@ -1,0 +1,71 @@
+@model Member
+@{ ViewData["Title"] = Model.FullName; }
+
+<div class="page-header">
+    <div class="person-cell">
+        <span class="avatar">@DisplayHelper.Initials(Model.FullName)</span>
+        <div>
+            <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Members</a>
+            <h1>@Model.FullName</h1>
+            <p>@Model.MembershipType member since @DisplayHelper.Date(Model.JoinDate)</p>
+        </div>
+    </div>
+    <div class="page-actions">
+        <a asp-controller="Borrowings" asp-action="GetCreateView" class="btn btn-light-outline"><i class="bi bi-plus-lg"></i>New borrowing</a>
+        <a asp-action="GetEditView" asp-route-id="@Model.Id" class="btn btn-primary"><i class="bi bi-pencil"></i>Edit</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="panel">
+            <div class="panel-head">
+                <h2>Profile</h2>
+                @if (Model.IsActive)
+                {
+                    <span class="pill pill-ok">Active</span>
+                }
+                else
+                {
+                    <span class="pill pill-muted">Inactive</span>
+                }
+            </div>
+            <div class="panel-body">
+                <dl class="detail-list" style="grid-template-columns:120px 1fr">
+                    <dt>@Html.DisplayNameFor(m => m.NationalId)</dt><dd>@Model.NationalId</dd>
+                    <dt>Email</dt><dd>@Model.Email</dd>
+                    <dt>Phone</dt><dd>@Model.PhoneNo</dd>
+                    <dt>Address</dt><dd>@(string.IsNullOrWhiteSpace(Model.Address) ? "—" : Model.Address)</dd>
+                    <dt>Birth date</dt><dd>@DisplayHelper.Date(Model.BirthDate)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="panel">
+            <div class="panel-head">
+                <h2>Borrowing history</h2>
+                <span class="result-count">@Model.Borrowings.Count(b => !b.IsReturned) on loan · @DisplayHelper.Money(Model.Borrowings.Sum(b => b.LateFee)) late fees</span>
+            </div>
+            @if (Model.Borrowings.Any())
+            {
+                <ul class="link-list">
+                    @foreach (var b in Model.Borrowings.OrderByDescending(x => x.BorrowDate))
+                    {
+                        <li>
+                            <span>
+                                <a asp-controller="Borrowings" asp-action="GetDetailsView" asp-route-id="@b.Id" class="cell-title">@b.Book.Title</a>
+                                <span class="cell-sub">@DisplayHelper.Date(b.BorrowDate) → due @DisplayHelper.Date(b.DueDate)</span>
+                            </span>
+                            <partial name="_BorrowingStatus" model="b" />
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="empty-state"><i class="bi bi-clock-history"></i><h3>No borrowing history</h3><p>This member hasn't borrowed any books yet.</p></div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+@model Category
+@{ ViewData["Title"] = Model.Name; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Categories</a>
+        <h1>@Model.Name</h1>
+        <p>@Model.Description</p>
+    </div>
+    <div class="page-actions">
+        @if (Model.IsActive)
+        {
+            <span class="pill pill-ok align-self-center">Active</span>
+        }
+        else
+        {
+            <span class="pill pill-muted align-self-center">Inactive</span>
+        }
+        <a asp-action="GetEditView" asp-route-id="@Model.Id" class="btn btn-primary"><i class="bi bi-pencil"></i>Edit</a>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2>@ViewBag.PageNote</h2>
+        <span class="result-count">@Model.Books.Count @(Model.Books.Count == 1 ? "book" : "books")</span>
+    </div>
+    @if (Model.Books.Any())
+    {
+        <ul class="link-list">
+            @foreach (var b in Model.Books.OrderBy(b => b.Title))
+            {
+                <li>
+                    <span class="book-cell">
+                        <img src="@DisplayHelper.ImageUrl(b.ImagePath)" class="thumb" alt="" />
+                        <span>
+                            <a asp-controller="Books" asp-action="GetDetailsView" asp-route-id="@b.Id" class="cell-title">@b.Title</a>
+                            <span class="cell-sub">@b.AuthorName</span>
+                        </span>
+                    </span>
+                    <span>@DisplayHelper.Money(b.Price)</span>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <div class="empty-state"><i class="bi bi-journal"></i><h3>No books in this category</h3></div>
+    }
+</div>

@@ -1,0 +1,33 @@
+@model Borrowing
+@{ ViewData["Title"] = "Delete Borrowing"; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Borrowings</a>
+        <h1>Delete borrowing</h1>
+    </div>
+</div>
+
+<div class="panel danger-panel form-panel" style="max-width:640px">
+    <div class="danger-head">
+        <span class="icon"><i class="bi bi-exclamation-triangle"></i></span>
+        <div>
+            <h2>Delete this borrowing record?</h2>
+            <p>If the book hasn't been returned yet, it becomes available again.</p>
+        </div>
+    </div>
+    <div class="panel-body">
+        <dl class="detail-list">
+            <dt>Book</dt><dd>@Model.Book.Title</dd>
+            <dt>Member</dt><dd>@Model.Member.FullName</dd>
+            <dt>Borrow date</dt><dd>@DisplayHelper.Date(Model.BorrowDate)</dd>
+            <dt>Status</dt><dd><partial name="_BorrowingStatus" model="Model" /></dd>
+            <dt>Late fee</dt><dd>@DisplayHelper.Money(Model.LateFee)</dd>
+        </dl>
+    </div>
+    <form method="post" asp-action="DeleteCurrent" class="form-footer">
+        <input type="hidden" asp-for="Id" />
+        <button class="btn btn-danger" type="submit"><i class="bi bi-trash3"></i>Delete record</button>
+        <a asp-action="GetIndexView" class="btn btn-light-outline">Cancel</a>
+    </form>
+</div>

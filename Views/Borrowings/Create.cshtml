@@ -1,0 +1,50 @@
+@model Borrowing
+@{ ViewData["Title"] = "New Borrowing"; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Borrowings</a>
+        <h1>New borrowing</h1>
+        <p>Only available books and active members are listed. The due date defaults to two weeks.</p>
+    </div>
+</div>
+
+<form method="post" asp-action="AddNew" class="panel form-panel" style="max-width:720px">
+    <div class="panel-body">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="form-grid">
+            <div class="span-2">
+                <label asp-for="BookId" class="form-label"></label>
+                <select asp-for="BookId" asp-items="ViewBag.AllBooks" class="form-select">
+                    <option value="">Select book</option>
+                </select>
+                <span asp-validation-for="BookId" class="text-danger"></span>
+            </div>
+            <div class="span-2">
+                <label asp-for="MemberId" class="form-label"></label>
+                <select asp-for="MemberId" asp-items="ViewBag.AllMembers" class="form-select">
+                    <option value="">Select member</option>
+                </select>
+                <span asp-validation-for="MemberId" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="BorrowDate" class="form-label"></label>
+                <input asp-for="BorrowDate" type="date" class="form-control" />
+                <span asp-validation-for="BorrowDate" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="DueDate" class="form-label"></label>
+                <input asp-for="DueDate" type="date" class="form-control" />
+                <span asp-validation-for="DueDate" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-footer">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i>Create borrowing</button>
+        <a asp-action="GetIndexView" class="btn btn-light-outline">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,75 @@
+@{
+    string currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    string NavClass(string controller) => currentController == controller ? "side-link active" : "side-link";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LibrarySystem</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <a class="brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark"><i class="bi bi-book-half"></i></span>
+                <span>
+                    <span class="brand-name">LibrarySystem</span>
+                    <span class="brand-sub">Knowledge Hub Library</span>
+                </span>
+            </a>
+
+            <nav class="side-nav">
+                <span class="side-label">Overview</span>
+                <a class="@NavClass("Home")" asp-controller="Home" asp-action="Index"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+
+                <span class="side-label">Catalog</span>
+                <a class="@NavClass("Books")" asp-controller="Books" asp-action="GetIndexView"><i class="bi bi-journal-bookmark"></i> Books</a>
+                <a class="@NavClass("Categories")" asp-controller="Categories" asp-action="GetIndexView"><i class="bi bi-tags"></i> Categories</a>
+                <a class="@NavClass("Publishers")" asp-controller="Publishers" asp-action="GetIndexView"><i class="bi bi-building"></i> Publishers</a>
+
+                <span class="side-label">Circulation</span>
+                <a class="@NavClass("Members")" asp-controller="Members" asp-action="GetIndexView"><i class="bi bi-people"></i> Members</a>
+                <a class="@NavClass("Borrowings")" asp-controller="Borrowings" asp-action="GetIndexView"><i class="bi bi-arrow-left-right"></i> Borrowings</a>
+            </nav>
+
+            <partial name="_TSContacts" />
+        </aside>
+
+        <div class="app-main">
+            <header class="topbar">
+                <button class="menu-toggle" type="button" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Toggle menu">
+                    <i class="bi bi-list"></i>
+                </button>
+                <span class="topbar-title">LibrarySystem</span>
+            </header>
+
+            <main role="main" class="content">
+                @if (TempData["Success"] is string successMessage)
+                {
+                    <div class="flash flash-success" role="status">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>@successMessage</span>
+                        <button type="button" class="flash-close" onclick="this.parentElement.remove()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                }
+                @RenderBody()
+            </main>
+
+            <footer class="app-footer">&copy; 2026 LibrarySystem &middot; ASP.NET Core MVC</footer>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

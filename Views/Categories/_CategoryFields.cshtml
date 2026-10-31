@@ -1,0 +1,22 @@
+@model Category
+<div class="panel-body">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="form-grid">
+        <div class="span-2">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" placeholder="e.g. Programming" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="span-2">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="span-2">
+            <div class="switch-row form-switch">
+                <input asp-for="IsActive" class="form-check-input" role="switch" />
+                <label asp-for="IsActive" class="form-check-label"></label>
+            </div>
+        </div>
+    </div>
+</div>

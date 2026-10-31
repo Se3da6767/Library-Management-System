@@ -1,0 +1,23 @@
+@model Category
+@{ ViewData["Title"] = "Edit category"; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Categories</a>
+        <h1>Edit category</h1>
+        <p>Update the name, description or status of this category.</p>
+    </div>
+</div>
+
+<form method="post" asp-action="EditCurrent" class="panel form-panel" style="max-width:640px">
+    <input type="hidden" asp-for="Id" />
+    <partial name="_CategoryFields" model="Model" />
+    <div class="form-footer">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i>Save changes</button>
+        <a asp-action="GetIndexView" class="btn btn-light-outline">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,85 @@
+@model Book
+@* Shared fields for the Create and Edit book forms. *@
+<div class="panel-body">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="form-with-preview">
+        <div class="form-grid">
+            <div class="span-2">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" placeholder="e.g. Clean Code" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="AuthorName" class="form-label"></label>
+                <input asp-for="AuthorName" class="form-control" />
+                <span asp-validation-for="AuthorName" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="ISBN" class="form-label"></label>
+                <input asp-for="ISBN" class="form-control" inputmode="numeric" />
+                <div class="form-hint">10 or 13 digits, no dashes.</div>
+                <span asp-validation-for="ISBN" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="CategoryId" class="form-label"></label>
+                <select asp-for="CategoryId" asp-items="ViewBag.AllCategories" class="form-select">
+                    <option value="">Select category</option>
+                </select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="PublisherId" class="form-label"></label>
+                <select asp-for="PublisherId" asp-items="ViewBag.AllPublishers" class="form-select">
+                    <option value="">Select publisher</option>
+                </select>
+                <span asp-validation-for="PublisherId" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Price" class="form-label"></label>
+                <input asp-for="Price" type="number" step="0.01" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="PublicationDate" class="form-label"></label>
+                <input asp-for="PublicationDate" type="date" class="form-control" />
+                <span asp-validation-for="PublicationDate" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Pages" class="form-label"></label>
+                <input asp-for="Pages" type="number" class="form-control" />
+                <span asp-validation-for="Pages" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Language" class="form-label"></label>
+                <input asp-for="Language" class="form-control" placeholder="e.g. English" />
+                <span asp-validation-for="Language" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="StockQuantity" class="form-label"></label>
+                <input asp-for="StockQuantity" type="number" min="0" class="form-control" />
+                <span asp-validation-for="StockQuantity" class="text-danger"></span>
+            </div>
+            <div class="d-flex align-items-end">
+                <div class="switch-row form-switch w-100">
+                    <input asp-for="IsAvailable" class="form-check-input" role="switch" />
+                    <label asp-for="IsAvailable" class="form-check-label"></label>
+                </div>
+            </div>
+            <div class="span-2">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div>
+            <label asp-for="ImageFile" class="form-label"></label>
+            <div class="upload-preview mb-2">
+                <img src="@DisplayHelper.ImageUrl(Model?.ImagePath)" id="bookImage" alt="Book cover preview" />
+            </div>
+            <input type="file" asp-for="ImageFile" accept=".png,.jpg,.jpeg,.webp" class="form-control" id="imageFileInput" onchange="addPreviewImage()" />
+            <div class="form-hint">JPG, PNG or WEBP · max 2 MB</div>
+            <span asp-validation-for="ImageFile" class="text-danger"></span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+@model Book
+@{ ViewData["Title"] = "Add Book"; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Books</a>
+        <h1>Add a new book</h1>
+        <p>Fill in the book details and upload a cover image.</p>
+    </div>
+</div>
+
+<form method="post" asp-controller="Books" asp-action="AddNew" enctype="multipart/form-data" class="panel">
+    <partial name="_BookFields" model="Model" />
+    <div class="form-footer">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i>Add book</button>
+        <a asp-action="GetIndexView" class="btn btn-light-outline">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function addPreviewImage() {
+            const file = document.getElementById('imageFileInput').files[0];
+            if (file) document.getElementById('bookImage').src = window.URL.createObjectURL(file);
+        }
+    </script>
+}

@@ -1,0 +1,16 @@
+@model Borrowing
+@{
+    int daysLate = (DateTime.Today - Model.DueDate.Date).Days;
+}
+@if (Model.IsReturned)
+{
+    <span class="pill pill-ok">Returned</span>
+}
+else if (daysLate > 0)
+{
+    <span class="pill pill-bad" title="Due @DisplayHelper.Date(Model.DueDate)">Overdue · @daysLate @(daysLate == 1 ? "day" : "days")</span>
+}
+else
+{
+    <span class="pill pill-info">On loan</span>
+}

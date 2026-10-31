@@ -1,0 +1,23 @@
+@model Member
+@{ ViewData["Title"] = "Edit member"; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Members</a>
+        <h1>Edit member</h1>
+        <p>Members must be at least 12 years old. National Id and email must be unique.</p>
+    </div>
+</div>
+
+<form method="post" asp-action="EditCurrent" class="panel form-panel">
+    <input type="hidden" asp-for="Id" />
+    <partial name="_MemberFields" model="Model" />
+    <div class="form-footer">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i>Save changes</button>
+        <a asp-action="GetIndexView" class="btn btn-light-outline">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

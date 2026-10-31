@@ -1,0 +1,32 @@
+@model Publisher
+@{ ViewData["Title"] = "Delete Publisher"; }
+
+<div class="page-header">
+    <div>
+        <a asp-action="GetIndexView" class="eyebrow"><i class="bi bi-arrow-left"></i> Publishers</a>
+        <h1>Delete publisher</h1>
+    </div>
+</div>
+
+<div class="panel danger-panel form-panel" style="max-width:640px">
+    <div class="danger-head">
+        <span class="icon"><i class="bi bi-exclamation-triangle"></i></span>
+        <div>
+            <h2>Delete “@Model.Name”?</h2>
+            <p>A publisher can only be deleted when it has no books.</p>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div asp-validation-summary="ModelOnly"></div>
+        <dl class="detail-list">
+            <dt>Name</dt><dd>@Model.Name</dd>
+            <dt>Country</dt><dd>@Model.Country</dd>
+            <dt>Books</dt><dd>@Model.Books.Count</dd>
+        </dl>
+    </div>
+    <form method="post" asp-action="DeleteCurrent" class="form-footer">
+        <input type="hidden" asp-for="Id" />
+        <button class="btn btn-danger" type="submit"><i class="bi bi-trash3"></i>Delete publisher</button>
+        <a asp-action="GetIndexView" class="btn btn-light-outline">Cancel</a>
+    </form>
+</div>

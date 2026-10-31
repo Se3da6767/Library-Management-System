@@ -1,0 +1,92 @@
+@model IEnumerable<Member>
+@{
+    ViewData["Title"] = "Members";
+    string? search = ViewBag.CurrentSearch;
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Circulation</span>
+        <h1>Members</h1>
+        <p>People registered to borrow books from the library.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="GetCreateView" class="btn btn-primary"><i class="bi bi-person-plus"></i>Add member</a>
+    </div>
+</div>
+
+<div class="toolbar">
+    <form method="get" asp-action="GetIndexView" class="search-box">
+        <i class="bi bi-search"></i>
+        <input name="search" value="@search" class="form-control" placeholder="Search by name, email or phone" />
+    </form>
+    <span class="result-count">
+        @Model.Count() @(Model.Count() == 1 ? "member" : "members")
+        @if (!string.IsNullOrWhiteSpace(search))
+        {
+            <a asp-action="GetIndexView" class="clear-link">Clear search</a>
+        }
+    </span>
+</div>
+
+<div class="panel">
+    @if (Model.Any())
+    {
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.FullName)</th>
+                        <th>Phone</th>
+                        <th>@Html.DisplayNameFor(m => m.MembershipType)</th>
+                        <th>@Html.DisplayNameFor(m => m.JoinDate)</th>
+                        <th class="num">On loan</th>
+                        <th>Status</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="person-cell">
+                                    <span class="avatar sm">@DisplayHelper.Initials(m.FullName)</span>
+                                    <span>
+                                        <a asp-action="GetDetailsView" asp-route-id="@m.Id" class="cell-title">@m.FullName</a>
+                                        <span class="cell-sub">@m.Email</span>
+                                    </span>
+                                </span>
+                            </td>
+                            <td>@m.PhoneNo</td>
+                            <td><span class="chip">@m.MembershipType</span></td>
+                            <td class="nowrap">@DisplayHelper.Date(m.JoinDate)</td>
+                            <td class="num">@m.Borrowings.Count(b => !b.IsReturned)</td>
+                            <td>
+                                @if (m.IsActive)
+                                {
+                                    <span class="pill pill-ok">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="pill pill-muted">Inactive</span>
+                                }
+                            </td>
+                            <td class="actions">
+                                <span class="icon-actions">
+                                    <a asp-action="GetDetailsView" asp-route-id="@m.Id" class="btn-icon" title="Details"><i class="bi bi-eye"></i></a>
+                                    <a asp-action="GetEditView" asp-route-id="@m.Id" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    <a asp-action="GetDeleteView" asp-route-id="@m.Id" class="btn-icon delete" title="Delete"><i class="bi bi-trash3"></i></a>
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state"><i class="bi bi-people"></i><h3>No members found</h3><p>@(string.IsNullOrWhiteSpace(search) ? "Register the first member to start lending books." : "Try another name, email or phone number.")</p></div>
+    }
+</div>
